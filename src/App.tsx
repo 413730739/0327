@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import { Github, ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
 
 const SKILLS = [
   { name: "前端網頁開發(html/css/js)", percent: 90 },
@@ -75,10 +75,14 @@ const CONTESTS = [
 function SkillCircle({ name, percent }: { name: string; percent: number; key?: any }) {
   const radius = 45;
   const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (circumference * percent) / 100;
 
   return (
-    <div className="flex flex-col items-center p-2 bg-white border border-gray-200 rounded-lg text-center h-full">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      className="flex flex-col items-center p-2 bg-white border border-gray-200 rounded-lg text-center h-full"
+    >
       <div className="relative w-20 h-20 mb-2">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
           <circle
@@ -97,10 +101,10 @@ function SkillCircle({ name, percent }: { name: string; percent: number; key?: a
             stroke="#0081a7"
             strokeWidth="10"
             strokeLinecap="round"
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            style={{ strokeDasharray: circumference }}
+            initial={{ strokeDasharray: circumference, strokeDashoffset: circumference }}
+            whileInView={{ strokeDashoffset: circumference - (circumference * percent) / 100 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            viewport={{ once: true }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-[#0081a7]">
@@ -110,7 +114,7 @@ function SkillCircle({ name, percent }: { name: string; percent: number; key?: a
       <span className="text-[11px] leading-tight text-gray-700 line-clamp-2">
         {name}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -122,10 +126,11 @@ function ProgramBar({ name, score }: { name: string; score: number; key?: any })
       </span>
       <div className="flex-1 h-5 bg-[#fdfcdc] rounded-full overflow-hidden relative">
         <motion.div
-          className="h-full rounded-full flex items-center justify-end px-2"
           initial={{ width: 0 }}
-          animate={{ width: `${score}%` }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
+          whileInView={{ width: `${score}%` }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="h-full rounded-full flex items-center justify-end px-2"
           style={{
             backgroundColor:
               score >= 80 ? "#28a745" : score >= 60 ? "#ffc107" : "#dc3545",
@@ -141,13 +146,18 @@ function ProgramBar({ name, score }: { name: string; score: number; key?: any })
 export default function App() {
   return (
     <div className="min-h-screen p-4 md:p-8 flex justify-center items-start">
-      <div className="resume w-full max-w-6xl bg-white shadow-2xl flex flex-col md:flex-row rounded-xl overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="resume w-full max-w-6xl bg-white shadow-2xl flex flex-col md:flex-row rounded-xl overflow-hidden"
+      >
         {/* Left Section */}
         <div className="left w-full md:w-1/2 bg-[#fed9b7] p-6 md:p-10">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
             <h1 className="text-4xl font-bold text-[#0081a7] mb-2">吳哲宇</h1>
             <h4 className="text-lg font-medium text-[#00afb9] mb-4">
@@ -160,18 +170,22 @@ export default function App() {
             </p>
 
             <div className="flex gap-4 mb-12">
-              <a
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 href="#"
                 className="flex items-center gap-2 bg-[#0081a7] text-white px-6 py-2 rounded-lg hover:bg-[#006d8c] transition-colors"
               >
                 <ExternalLink size={18} /> 作品集
-              </a>
-              <a
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 href="#"
                 className="flex items-center gap-2 bg-[#00afb9] text-white px-6 py-2 rounded-lg hover:bg-[#0096a0] transition-colors"
               >
                 <Github size={18} /> Github
-              </a>
+              </motion.a>
             </div>
 
             <div className="block mb-12">
@@ -209,7 +223,7 @@ export default function App() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
           >
             <div className="block mb-12">
               <h4 className="text-sm uppercase tracking-widest text-[#00afb9] mb-1">
@@ -220,7 +234,14 @@ export default function App() {
               </h2>
               <div className="space-y-8">
                 {EXPERIENCE.map((exp, index) => (
-                  <div key={index} className="flex gap-6 relative">
+                  <motion.div 
+                    key={index} 
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex gap-6 relative"
+                  >
                     <div className="flex flex-col items-center">
                       <div className="w-4 h-4 rounded-full bg-[#f07167] z-10" />
                       {index !== EXPERIENCE.length - 1 && (
@@ -239,7 +260,7 @@ export default function App() {
                         ))}
                       </ul>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -253,16 +274,25 @@ export default function App() {
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 list-disc list-inside text-gray-700">
                 {CONTESTS.map((contest, index) => (
-                  <li key={index} className="text-sm">
+                  <motion.li 
+                    key={index} 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                    className="text-sm"
+                  >
                     {contest}
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
+
+
 
